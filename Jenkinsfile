@@ -1,6 +1,14 @@
 pipeline {
     agent any
     stages {
+        stage("install dependencies") {
+            steps {
+                script {
+                    sh "pip install -r requirements.txt"
+                }
+            }
+        }
+
         stage("main") {
             steps {
                 script {
@@ -8,6 +16,7 @@ pipeline {
                 }    
             }
         }
+        
         stage("test_main") {
             steps {
                 script {
