@@ -20,9 +20,8 @@ pipeline {
         stage("test_main") {
             steps {
                 script {
-                    sh "export PATH=$PATH:/var/lib/jenkins/.local/bin"
-                    
-                    sh "pytest tests/test_main.py --maxfail=1 --disable-warnings -q"
+                    sh "/var/lib/jenkins/.local/bin/pytest tests/test_main.py --maxfail=1 --disable-warnings -q"
+
                 }
             }
         }
