@@ -12,9 +12,10 @@ pipeline {
         stage("Tests") {
             steps {
                 script {
-                    sh "/var/lib/jenkins/.local/bin/pytest tests/test_main.py --maxfail=1 --disable-warnings -q"
-                    sh "coverage report"
-                    sh "coverage html"
+                    sh "python -m coverage run -m pytest tests/test_main.py --maxfail=1 --disable-warnings -q"
+                    sh "python -m coverage report"
+                    sh "python -m coverage html"
+
                 }
             }
         }
