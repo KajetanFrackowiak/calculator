@@ -1,5 +1,10 @@
 pipeline {
     agent any
+
+    triggers {
+        pollSCM("* * * * *") // Pools every minute
+    }
+
     stages {
         stage("Install Dependencies") {
             steps {
@@ -45,5 +50,13 @@ pipeline {
                 ])
             }
         }
+
+        // post {
+        //     always {
+        //         mail to: "kajtek.gdynia@gmail.com",
+        //         subject: "Completed Pipeline: ${currentBuild.fullDisplayName}",
+        //         body: "Your build completed, please check: ${env.BUILD_URL}"
+        //     }
+        // }
     }
 }
