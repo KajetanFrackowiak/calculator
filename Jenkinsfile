@@ -9,6 +9,12 @@ pipeline {
             }
         }
 
+        stage("Static Code Analysis") {
+            steps {
+                sh "python -m flake8 . --format=html --htmldir=flake8-report"
+            }
+        }
+
         stage("Tests") {
             steps {
                 script {
@@ -26,6 +32,16 @@ pipeline {
                     reportDir: "htmlcov",
                     reportFiles: "index.html",
                     reportName: "Coverage Report"
+                ])
+            }
+        }
+
+        stage("Publish Flake8 Report") {
+            steps {
+                publishHTML(target: [
+                    reportDir: "flake8-report",
+                    reportFiles: "index.html",
+                    reportName: "Static Code Analysis"
                 ])
             }
         }
