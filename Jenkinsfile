@@ -56,7 +56,7 @@ pipeline {
             script {
                 if (params.SEND_EMAIL) {
                     emailext(
-                        to: "kajtek.gdynia@gmail.com",
+                        to: "kajtek.gdynia1@onet.pl",
                         subject: "Pipeline Result: ${currentBuild.fullDisplayName}",
                         body: """\
 Your pipeline has finished.
