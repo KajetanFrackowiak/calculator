@@ -6,7 +6,7 @@ pipeline {
     }
 
     parameters {
-        booleanParam(name: "SEND_EMAIL", defaultValue: false, description: "Enable email notification?")
+        booleanParam(name: "SEND_EMAIL", defaultValue: true, description: "Enable email notification?")
     }
 
     stages {
