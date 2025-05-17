@@ -2,15 +2,17 @@ pipeline {
     agent any
 
     triggers {
-        pollSCM("* * * * *") // Pools every minute
+        pollSCM("* * * * *") // Polls every minute
+    }
+
+    parameters {
+        booleanParam(name: "SEND_EMAIL", defaultValue: True, description: "Enable email notification?")
     }
 
     stages {
         stage("Install Dependencies") {
             steps {
-                script {
-                    sh "pip install -r requirements.txt"
-                }
+                sh "pip install -r requirements.txt"
             }
         }
 
@@ -22,18 +24,15 @@ pipeline {
 
         stage("Tests") {
             steps {
-                script {
-                    sh "python -m coverage run -m pytest tests/test_main.py --maxfail=1 --disable-warnings -q"
-                    sh "python -m coverage report"
-                    sh "python -m coverage html"
-
-                }
+                sh "python -m coverage run -m pytest tests/test_main.py --maxfail=1 --disable-warnings -q"
+                sh "python -m coverage report"
+                sh "python -m coverage html"
             }
         }
 
-        stage("Publish Coverage Raport") {
+        stage("Publish Coverage Report") {
             steps {
-                publishHTML (target : [
+                publishHTML(target: [
                     reportDir: "htmlcov",
                     reportFiles: "index.html",
                     reportName: "Coverage Report"
@@ -50,13 +49,25 @@ pipeline {
                 ])
             }
         }
+    }
 
-        // post {
-        //     always {
-        //         mail to: "kajtek.gdynia@gmail.com",
-        //         subject: "Completed Pipeline: ${currentBuild.fullDisplayName}",
-        //         body: "Your build completed, please check: ${env.BUILD_URL}"
-        //     }
-        // }
+    post {
+        always {
+            script {
+                if (params.SEND_EMAIL) {
+                    emailext(
+                        to: "kajtek.gdynia@gmail.com",
+                        subject: "Pipeline Result: ${currentBuild.fullDisplayName}",
+                        body: """\
+                            Your pipeline has finished.
+                            Status: ${currentBuild.currentResult}
+                            Details: ${env.BUILD_URL}
+                        """
+                    )
+                } else {
+                    echo "Email notification disabled by feature toggle."
+                }
+            }
+        }
     }
 }
