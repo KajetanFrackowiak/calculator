@@ -2,11 +2,11 @@ pipeline {
     agent any
 
     triggers {
-        pollSCM("* * * * *") // Polls every minute
+        pollSCM("* * * * *")
     }
 
     parameters {
-        booleanParam(name: "SEND_EMAIL", defaultValue: True, description: "Enable email notification?")
+        booleanParam(name: "SEND_EMAIL", defaultValue: false, description: "Enable email notification?")
     }
 
     stages {
@@ -59,10 +59,10 @@ pipeline {
                         to: "kajtek.gdynia@gmail.com",
                         subject: "Pipeline Result: ${currentBuild.fullDisplayName}",
                         body: """\
-                            Your pipeline has finished.
-                            Status: ${currentBuild.currentResult}
-                            Details: ${env.BUILD_URL}
-                        """
+Your pipeline has finished.
+Status: ${currentBuild.currentResult}
+Details: ${env.BUILD_URL}
+"""
                     )
                 } else {
                     echo "Email notification disabled by feature toggle."
