@@ -26,7 +26,7 @@ pipeline {
         }
         stage("Docker push") {
             steps {
-                withCredentials([string(credentialsId: 'docker-hub-password', variable: 'DOCKER_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', variable: 'DOCKER_PASSWORD')]) {
                     sh "echo $DOCKER_PASSWORD | docker login -u thekajtek --password-stdin"
                     sh "docker push thekajtek/calculator:${BUILD_TIMESTAMP}"
                 }
