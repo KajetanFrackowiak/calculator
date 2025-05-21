@@ -11,7 +11,7 @@ pipeline {
         }
         stage("Unit test") {
             steps {
-                sh "pip install pytest && pytest test_main.py"
+                sh "pip install pytest && pytest tests/test_main.py"
             }
         }
         stage("Build") {
@@ -26,7 +26,7 @@ pipeline {
         }
         stage("Docker push") {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', variable: 'DOCKER_PASSWORD')]) {
+                withCredentials([usernamePassword(credentialsId: 'docker-hub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD')]) {
                     sh "echo $DOCKER_PASSWORD | docker login -u thekajtek --password-stdin"
                     sh "docker push thekajtek/calculator:${BUILD_TIMESTAMP}"
                 }
