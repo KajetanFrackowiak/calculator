@@ -1,14 +1,19 @@
 # main.py
 from flask import Flask, request, jsonify
 import hazelcast
-
-hz_client = hazelcast.HazelcastClient(cluster_members=["hazelcast:5701"])
-cache = hz_client.get_map("calc-cache").blocking()
-
 app = Flask(__name__)
 
 
+def init_hazelcast():
+    global hz_client, cache
+    if hz_client is None:
+        hz_client = hazelcast.HazelcastClient(cluster_members=["hazelcast:5701"])
+        cache = hz_client.get_map("calc-cache").blocking()
+
+
 def cached_operation(op_name, a, b):
+    if cache is None:
+        init_hazelcast()
     key = f"{op_name}:{a}:{b}"
     if cache.contains_key(key):
         return cache.get(key)
