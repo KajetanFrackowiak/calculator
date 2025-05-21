@@ -1,0 +1,17 @@
+# Modified inventory.yaml for local development
+apiVersion: v1
+kind: Config
+clusters:
+- name: local
+  cluster:
+    server: http://localhost:8080
+contexts:
+- name: local
+  context:
+    cluster: local
+    user: developer
+current-context: local
+users:
+- name: developer
+  user:
+    username: developer
